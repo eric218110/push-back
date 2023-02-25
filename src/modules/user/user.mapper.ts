@@ -1,12 +1,22 @@
+import { CriptUtil } from './../../shared/utils/crypt/index';
+import { Injectable } from '@nestjs/common';
 import { Auth, Company, Prisma, User } from "@prisma/client";
 import { CreateNewUserBody, FindOneUser, ListOneUserById } from "./user.model";
 
+@Injectable()
 export class UserMapper {
-  public createNewUserBodyToUserCreateInput(body: CreateNewUserBody): Prisma.UserCreateInput {
+
+  constructor(
+    private readonly criptUtil: CriptUtil
+  ) { }
+
+  public async createNewUserBodyToUserCreateInput(body: CreateNewUserBody): Promise<Prisma.UserCreateInput> {
     const { company_name, company_address } = body
 
     const data = company_name && company_address ? { company: { create: { company_address, company_name } } } : {}
     const { name, phone_number = '', email, password } = body
+
+    const passwordHash = await this.criptUtil.generateHashByValue(password)
 
     return {
       name,
@@ -14,7 +24,7 @@ export class UserMapper {
       auth: {
         create: {
           email,
-          password
+          password: passwordHash
         }
       },
       company: {
@@ -30,7 +40,7 @@ export class UserMapper {
       company
     } = findOneUser
 
-    const companyData = company ? { company_address: company?.company_name, company_name: company?.company_name } : undefined 
+    const companyData = company ? { company_address: company?.company_name, company_name: company?.company_name } : undefined
 
     return {
       name,

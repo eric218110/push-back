@@ -2,7 +2,7 @@ import { ErrorHandler } from './../../shared/error/error.handler';
 import { CreateNewUserBody, FindOneUser, ListOneUserById } from './user.model';
 import { PrismaService } from './../../shared/infra/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { UserMapper } from './user.mapper';
 import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
@@ -11,13 +11,13 @@ import { HttpStatus } from '@nestjs/common/enums';
 export class UserService {
 
   constructor(
-    private prisma: PrismaService,
-    private userMapper: UserMapper
+    private readonly prisma: PrismaService,
+    private readonly userMapper: UserMapper,
   ) { }
 
   public async registerOneUser(body: CreateNewUserBody): Promise<{ id: number } | ErrorHandler> {
     try {
-      const data = { ...this.userMapper.createNewUserBodyToUserCreateInput(body) }
+      const data = await this.userMapper.createNewUserBodyToUserCreateInput(body)
       const { id } = await this.prisma.user.create({ data })
       return { id }
     } catch (error) {
@@ -29,7 +29,7 @@ export class UserService {
   }
 
   public async readUserById(id: number): Promise<ListOneUserById | ErrorHandler> {
-    const findOneUser = await this.prisma.user.findFirst({
+    const findOneUser = await this.prisma.user.findUniqueOrThrow({
       where: {
         id
       },
@@ -40,6 +40,9 @@ export class UserService {
         auth: { select: { password: true, email: true } },
         company: { select: { company_address: true, company_name: true } }
       }
+    }).catch((e) => {
+      console.log(e)
+      return null
     })
 
     if (!findOneUser) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
