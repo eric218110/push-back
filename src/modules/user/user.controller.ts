@@ -1,7 +1,7 @@
 import { UserService } from './user.service';
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateNewUserBody } from './user.model';
-import { Param } from '@nestjs/common/decorators';
+import { CreateNewUserBody, FindOneByIdPath } from './user.model';
+import { Get, Param } from '@nestjs/common/decorators';
 
 @Controller()
 export class UserController {
@@ -12,8 +12,8 @@ export class UserController {
     return this.userService.registerOneUser(body);
   }
 
-  @Post('users/{id}')
-  readUser(@Param() id: number) {
-    return this.userService.readUserById(id);
+  @Get('users/:id')
+  readUserById(@Param() { id }: FindOneByIdPath) {
+    return this.userService.readUserById(Number(id));
   }
 }
