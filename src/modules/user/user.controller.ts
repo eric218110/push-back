@@ -1,8 +1,8 @@
-import { UserService } from './user.service';
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateNewUserBody, FindOneByIdPath } from './user.model';
 import { Get, Param, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateNewUserBody, FindOneByIdPath } from './user.model';
+import { UserService } from './user.service';
 
 @Controller()
 export class UserController {

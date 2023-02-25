@@ -1,5 +1,5 @@
-import { AuthUsernameAndPasswordBody } from './auth.model';
 import { Body, Controller, Post } from '@nestjs/common';
+import { AuthUsernameAndPasswordBody } from './auth.model';
 import { AuthService } from './auth.service';
 
 @Controller()

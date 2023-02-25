@@ -1,11 +1,10 @@
-import { CriptUtil } from './../../shared/utils/crypt/index';
-import { HttpStatus } from '@nestjs/common/enums';
-import { HttpException, UnauthorizedException } from '@nestjs/common/exceptions';
-import { AuthUsernameAndPasswordBody, FindFirstAuth } from './auth.model';
-import { PrismaService } from './../../shared/infra/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from './../../shared/infra/prisma/prisma.service';
+import { CriptUtil } from './../../shared/utils/crypt/index';
 import { AuthMapper } from './auth.mapper';
+import { AuthUsernameAndPasswordBody, FindFirstAuth } from './auth.model';
 
 @Injectable()
 export class AuthService {

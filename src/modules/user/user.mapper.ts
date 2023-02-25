@@ -1,6 +1,6 @@
-import { CriptUtil } from './../../shared/utils/crypt/index';
 import { Injectable } from '@nestjs/common';
-import { Auth, Company, Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { CriptUtil } from './../../shared/utils/crypt/index';
 import { CreateNewUserBody, FindOneUser, ListOneUserById } from "./user.model";
 
 @Injectable()

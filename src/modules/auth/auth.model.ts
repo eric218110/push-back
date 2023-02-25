@@ -1,5 +1,5 @@
 import { Auth, User } from '@prisma/client';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 export class AuthUsernameAndPasswordBody {
 
   @IsString()

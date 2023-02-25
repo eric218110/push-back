@@ -1,11 +1,11 @@
-import { ErrorHandler } from './../../shared/error/error.handler';
-import { CreateNewUserBody, FindOneUser, ListOneUserById } from './user.model';
-import { PrismaService } from './../../shared/infra/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { UserMapper } from './user.mapper';
-import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
+import { HttpException } from '@nestjs/common/exceptions';
+import { Prisma } from '@prisma/client';
+import { ErrorHandler } from './../../shared/error/error.handler';
+import { PrismaService } from './../../shared/infra/prisma/prisma.service';
+import { UserMapper } from './user.mapper';
+import { CreateNewUserBody, FindOneUser, ListOneUserById } from './user.model';
 
 @Injectable()
 export class UserService {

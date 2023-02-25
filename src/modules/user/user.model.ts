@@ -1,7 +1,5 @@
-import { Company } from '@prisma/client';
-import { Auth } from '@prisma/client';
-import { User } from '@prisma/client';
-import { IsNotEmpty, IsString, IsEmail, IsOptional } from 'class-validator';
+import { Auth, Company, User } from '@prisma/client';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateNewUserBody {
 
