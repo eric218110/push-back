@@ -4,7 +4,8 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from './../../shared/infra/prisma/prisma.service';
 import { CriptUtil } from './../../shared/utils/crypt/index';
 import { DecodeUtil } from './../../shared/utils/decode/index';
-import { CreateApplicationModel, SuccessCreateApplication } from './application.model';
+import { ApplicationMapper } from './application.mapper';
+import { CreateApplicationModel, SuccessCreateApplication, SuccessListApplicationById } from './application.model';
 
 @Injectable()
 export class ApplicationService {
@@ -12,35 +13,49 @@ export class ApplicationService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly decodeUtil: DecodeUtil,
-    private readonly criptUtil: CriptUtil
+    private readonly criptUtil: CriptUtil,
+    private readonly applicationMapper: ApplicationMapper
   ) { }
 
-  public async createOneApp(createApplicationModel: CreateApplicationModel, acessToken: string): Promise<SuccessCreateApplication> {
+  public async createOneApp({ app_name }: CreateApplicationModel, accessToken: string): Promise<SuccessCreateApplication> {
     try {
-      const { userId } = this.decodeUtil.loadUserIdAndAuthIdInBearerToken(acessToken)
+      const { userId: id } = this.decodeUtil.loadUserIdAndAuthIdInBearerToken(accessToken)
 
-      const createApplication = await this.prismaService.application.create({
+      const { id: app_id, app_token } = await this.prismaService.application.create({
         data: {
-          app_name: createApplicationModel.app_name,
-          user: {
-            connect: {
-              id: userId
-            }
-          }
+          app_token: this.criptUtil.encriptText(app_name),
+          app_name,
+          user: { connect: { id } },
+          channel: { create: {} }
         }
       })
 
-      const app_token = this.criptUtil.encriptText(createApplication.app_name)
-
       return {
-        app_id: createApplication.id,
+        app_id,
         app_token
       }
+
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new HttpException(`Application already exists`, HttpStatus.BAD_REQUEST)
       }
       throw error
     }
+  }
+
+  public async listAppById(appId: number, accessToken: string): Promise<SuccessListApplicationById> {
+
+    const { userId } = this.decodeUtil.loadUserIdAndAuthIdInBearerToken(accessToken)
+    const application = await this.prismaService.application.findFirst({
+      where: { id: appId, userId },
+      include: { channel: {} }
+    })
+
+    if (application) {
+      return this.applicationMapper.prismaApplicationToSuccessListApplicationById(application)
+    }
+
+    throw new HttpException(`Application not exists`, HttpStatus.NOT_FOUND)
+
   }
 }

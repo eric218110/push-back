@@ -10,3 +10,12 @@ export type SuccessCreateApplication = {
   app_id: number,
   app_token: string
 }
+
+export type SuccessListApplicationById = SuccessCreateApplication & {
+  app_name: string,
+  active_channels: {
+    webpush: boolean,
+    email: boolean,
+    sms: boolean,
+  }
+}

@@ -1,9 +1,9 @@
-import { Body, Controller, Headers, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from '@nestjs/passport';
 import { CreateApplicationModel } from './application.model';
 import { ApplicationService } from './application.service';
 
-@Controller()
+@Controller('apps')
 export class ApplicationController {
 
   constructor(
@@ -11,7 +11,7 @@ export class ApplicationController {
   ) { }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('apps')
+  @Post()
   public creagetApplication(
     @Body() body: CreateApplicationModel,
     @Headers() { authorization = '' }: Record<'authorization', string>
@@ -19,4 +19,12 @@ export class ApplicationController {
     return this.applicationService.createOneApp(body, authorization)
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  public listApplicationById(
+    @Param() { id = '' }: Record<'id', string>,
+    @Headers() { authorization = '' }: Record<'authorization', string>
+  ) {
+    return this.applicationService.listAppById(Number(id), authorization)
+  }
 }
