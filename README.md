@@ -21,9 +21,8 @@ Url de deploy: [backend](https://src-backend-push-notification.vercel.app/)
 ## Executar backend local
 
 ```bash
-cd existing_repo
 git clone https://github.com/eric218110/src-backend-push-notification.git
-cd existing_repo
+cd src-backend-push-notification
 
 # Instalar os pactotes
 yarn install or npm install
