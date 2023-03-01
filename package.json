@@ -8,6 +8,7 @@
   "scripts": {
     "vercel-build": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev",
+    "migrations:dev": "npx prisma migrate deploy",
     "studio": "prisma studio",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

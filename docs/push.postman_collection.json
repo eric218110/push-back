@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "fb0921f2-f288-4055-b086-db6ffda42461",
+		"name": "Push",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8181012"
+	},
+	"item": [
+		{
+			"name": "User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { id = '' } = pm.response.json()\r",
+							"pm.environment.set(\"userId\", id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest(\"https://fakerapi.it/api/v1/persons?_quantity=1\", function (err, response) {\r",
+							"    const { data } = response.json()\r",
+							"\r",
+							"    pm.environment.set(\"email\", data[0].email);\r",
+							"    pm.environment.set(\"name\", `${data[0].firstname} ${data[0].lastname}`);\r",
+							"    pm.environment.set(\"password\",  data[0].email);\r",
+							"    pm.environment.set(\"phone_number\", data[0].phone);\r",
+							"    pm.environment.set(\"company_name\", data[0].address.city);\r",
+							"    pm.environment.set(\"company_address\", data[0].address.street);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"name\": \"{{name}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"company_name\": \"{{company_name}}\",\r\n    \"phone_number\": \"{{phone_number}}\",\r\n    \"company_address\": \"{{company_address}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"register"
+					]
+				},
+				"description": "Create new User"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { token = '' } = pm.response.json()\r",
+							"pm.environment.set(\"tokenUser\", token);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				},
+				"description": "Login User"
+			},
+			"response": []
+		},
+		{
+			"name": "List User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenUser}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/users/:ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": "{{userId}}",
+							"description": "Id user"
+						}
+					]
+				},
+				"description": "Create new User"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Application",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { app_id = '' } = pm.response.json()",
+							"pm.environment.set(\"appId\", app_id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"pm.sendRequest(\"https://fakerapi.it/api/v1/companies?_quantity=1\", function (err, response) {",
+							"    const { data } = response.json()",
+							"    pm.environment.set(\"applicationName\", data[0].name);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenUser}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"app_name\": \"{{applicationName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/apps",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"apps"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Application",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenUser}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/apps/:appId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"apps",
+						":appId"
+					],
+					"variable": [
+						{
+							"key": "appId",
+							"value": "{{appId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
