@@ -3,50 +3,50 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Auth {
-  id              Int @default(autoincrement()) @id
-  email           String @unique
-  password        String
-  token           String?
-  user            User @relation(fields: [userId], references: [id])
-  userId          Int @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  token    String?
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int     @unique
 }
 
 model User {
-  id              Int @default(autoincrement()) @id
-  name            String
-  phone_number    String
-  auth            Auth?
-  company         Company?
-  application     Application[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  phone_number String
+  auth         Auth?
+  company      Company?
+  application  Application[]
 }
 
 model Company {
-  id              Int @default(autoincrement()) @id
+  id              Int    @id @default(autoincrement())
   company_name    String
   company_address String
-  user            User @relation(fields: [userId], references: [id])
-  userId          Int @unique
+  user            User   @relation(fields: [userId], references: [id])
+  userId          Int    @unique
 }
 
 model Application {
-  id              Int @default(autoincrement()) @id
-  app_name        String @unique
-  app_token       String @unique
-  user            User @relation(fields: [userId], references: [id])
-  userId          Int
-  channel         ChannelsApplication?
+  id        Int                  @id @default(autoincrement())
+  app_name  String               @unique
+  app_token String               @unique
+  user      User                 @relation(fields: [userId], references: [id])
+  userId    Int
+  channel   ChannelsApplication?
 }
 
 model ChannelsApplication {
-  id              Int @default(autoincrement()) @id
-  webpush         Boolean @default(false)
-  email           Boolean @default(false)
-  sms             Boolean @default(false)
-  application     Application @relation(fields: [applicationId], references: [id])
-  applicationId   Int @unique
+  id            Int         @id @default(autoincrement())
+  webpush       Boolean     @default(false)
+  email         Boolean     @default(false)
+  sms           Boolean     @default(false)
+  application   Application @relation(fields: [applicationId], references: [id])
+  applicationId Int         @unique
 }

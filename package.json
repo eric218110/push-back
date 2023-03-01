@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "vercel-build": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev",
     "studio": "prisma studio",
     "build": "nest build",
