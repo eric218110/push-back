@@ -33,12 +33,13 @@ model Company {
 }
 
 model Application {
-  id        Int                  @id @default(autoincrement())
-  app_name  String               @unique
-  app_token String               @unique
-  user      User                 @relation(fields: [userId], references: [id])
-  userId    Int
-  channel   ChannelsApplication?
+  id                Int                  @id @default(autoincrement())
+  app_name          String               @unique
+  app_token         String               @unique
+  user              User                 @relation(fields: [userId], references: [id])
+  userId            Int
+  channel           ChannelsApplication?
+  web_push_settings SettingWebPush?
 }
 
 model ChannelsApplication {
@@ -48,4 +49,20 @@ model ChannelsApplication {
   sms           Boolean     @default(false)
   application   Application @relation(fields: [applicationId], references: [id])
   applicationId Int         @unique
+}
+
+model SettingWebPush {
+  id                              Int         @id @default(autoincrement())
+  name                            String
+  address                         String
+  url_icon                        String
+  message_text_allow_notification String
+  allow_button_text               String
+  deny_button_text                String
+  message_title                   String
+  message_text                    String
+  enable_url_redirect             Int
+  url_redirect                    String
+  application                     Application @relation(fields: [applicationId], references: [id])
+  applicationId                   Int         @unique
 }

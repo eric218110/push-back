@@ -12,6 +12,7 @@ export class AuthUsernameAndPasswordBody {
 }
 
 export type FindFirstAuth = Auth & {
+  token: string
   user: User
 }
 

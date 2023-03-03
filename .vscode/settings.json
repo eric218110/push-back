@@ -11,9 +11,9 @@
       "port": 5432,
       "driver": "PostgreSQL",
       "name": "Postgres",
+      "database": "docker",
       "username": "postgres",
-      "password": "docker",
-      "database": "docker"
+      "password": "postgres"
     }
   ]
 }
