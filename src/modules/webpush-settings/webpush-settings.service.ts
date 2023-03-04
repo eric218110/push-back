@@ -31,7 +31,7 @@ export class WebPushSettingsService {
 
     const data = this.webPushSettingsMapper.createWebPushSettingsModelToSettingWebPushCreateInput(body, appId)
 
-    if (applicationSettingsWebPush === null) {
+    if (applicationSettingsWebPush?.web_push_settings === null) {
       const { id } = await this.prismaService.settingWebPush.create({ data })
       if (!id) throw new HttpException('Not possibles add config in application', HttpStatus.BAD_REQUEST)
     }
