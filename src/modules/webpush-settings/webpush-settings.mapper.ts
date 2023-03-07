@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { CreateWebPushSettingsModel } from './webpush-settings.model';
+import { Prisma, SettingWebPush } from '@prisma/client';
+import { CreateWebPushSettingsModel, ListWebPushSettings } from './webpush-settings.model';
 
 @Injectable()
 export class WebPushSettingsMapper {
@@ -30,4 +30,41 @@ export class WebPushSettingsMapper {
       }
     }
   }
+
+  public settingWebPushToListWebPushSettings(webPushSettings: SettingWebPush): ListWebPushSettings {
+    const {
+      name,
+      address,
+      url_icon,
+      allow_button_text,
+      deny_button_text,
+      message_text_allow_notification,
+      message_text,
+      enable_url_redirect,
+      message_title,
+      url_redirect
+    } = webPushSettings
+
+    return {
+      settings: {
+        site: {
+          name,
+          address,
+          url_icon
+        },
+        allow_notification: {
+          allow_button_text,
+          deny_button_text,
+          message_text: message_text_allow_notification
+        },
+        welcome_notification: {
+          enable_url_redirect,
+          message_text,
+          message_title,
+          url_redirect
+        }
+      }
+    }
+  }
+
 }

@@ -41,11 +41,17 @@ export class WebPushSettingsService {
 
   }
 
-  public listWebPushSettings(appId: number) {
-    return this.prismaService.settingWebPush.findUnique({
+  public async listWebPushSettings(appId: number) {
+    const webPushSettings = await this.prismaService.settingWebPush.findUnique({
       where: {
         applicationId: appId
       }
-    })
+    }).catch(() => { throw new HttpException('Not possible read settings', HttpStatus.BAD_REQUEST) })
+
+    return this.webPushSettingsMapper.settingWebPushToListWebPushSettings(webPushSettings)
+  }
+
+  public async updateStatusWebPushSettings(appId: number) {
+
   }
 }
