@@ -19,3 +19,27 @@ export type SuccessListApplicationById = SuccessCreateApplication & {
     sms: boolean,
   }
 }
+
+export class ListApplicationPaginagionModel {
+  @IsString()
+  @IsNotEmpty()
+  skip: string
+
+  @IsString()
+  @IsNotEmpty()
+  take: string
+}
+
+type ListApplicationPaginagionSuccessType = {
+  app_name: string;
+  channel: {
+    webpush: boolean;
+    email: boolean;
+    sms: boolean;
+  };
+}
+
+export type ListApplicationPaginagionSuccess = {
+  count: number
+  items: ListApplicationPaginagionSuccessType[]
+}

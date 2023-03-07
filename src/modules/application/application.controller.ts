@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Headers, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Post, Query, UseGuards } from "@nestjs/common";
 import { AuthGuard } from '@nestjs/passport';
-import { CreateApplicationModel } from './application.model';
+import { CreateApplicationModel, ListApplicationPaginagionModel } from './application.model';
 import { ApplicationService } from './application.service';
 
 @Controller('apps')
@@ -26,5 +26,14 @@ export class ApplicationController {
     @Headers() { authorization = '' }: Record<'authorization', string>
   ) {
     return this.applicationService.listAppById(Number(id), authorization)
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  public loadAllApplicationPaginate(
+    @Query() query: ListApplicationPaginagionModel,
+    @Headers() { authorization = '' }: Record<'authorization', string>
+  ) {
+    return this.applicationService.listApplicationPagination(query, authorization)
   }
 }

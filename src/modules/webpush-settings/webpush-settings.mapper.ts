@@ -32,18 +32,19 @@ export class WebPushSettingsMapper {
   }
 
   public settingWebPushToListWebPushSettings(webPushSettings: SettingWebPush): ListWebPushSettings {
+
     const {
-      name,
-      address,
-      url_icon,
-      allow_button_text,
-      deny_button_text,
-      message_text_allow_notification,
-      message_text,
-      enable_url_redirect,
-      message_title,
-      url_redirect
-    } = webPushSettings
+      name = '',
+      address = '',
+      url_icon = '',
+      allow_button_text = '',
+      deny_button_text = '',
+      message_text_allow_notification = '',
+      message_text = '',
+      enable_url_redirect = 0,
+      message_title = '',
+      url_redirect = ''
+    } = webPushSettings = webPushSettings || {} as SettingWebPush
 
     return {
       settings: {

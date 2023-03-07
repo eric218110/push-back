@@ -49,6 +49,7 @@ export class WebPushSettingsService {
     }).catch(() => { throw new HttpException('Not possible read settings', HttpStatus.BAD_REQUEST) })
 
     return this.webPushSettingsMapper.settingWebPushToListWebPushSettings(webPushSettings)
+
   }
 
   public async updateStatusWebPushSettings(id: number): Promise<UpdateStatusWebPushSettings> {

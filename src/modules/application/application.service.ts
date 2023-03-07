@@ -5,7 +5,7 @@ import { PrismaService } from './../../shared/infra/prisma/prisma.service';
 import { CriptUtil } from './../../shared/utils/crypt/index';
 import { DecodeUtil } from './../../shared/utils/decode/index';
 import { ApplicationMapper } from './application.mapper';
-import { CreateApplicationModel, SuccessCreateApplication, SuccessListApplicationById } from './application.model';
+import { CreateApplicationModel, ListApplicationPaginagionModel, ListApplicationPaginagionSuccess, SuccessCreateApplication, SuccessListApplicationById } from './application.model';
 
 @Injectable()
 export class ApplicationService {
@@ -56,6 +56,44 @@ export class ApplicationService {
     }
 
     throw new HttpException(`Application not exists`, HttpStatus.NOT_FOUND)
+
+  }
+
+  public async listApplicationPagination(query: ListApplicationPaginagionModel, accessToken: string): Promise<ListApplicationPaginagionSuccess> {
+    const { userId } = this.decodeUtil.loadUserIdAndAuthIdInBearerToken(accessToken)
+
+    const { skip, take } = query
+
+    const applications = await this.prismaService.application.findMany({
+      skip: Number(skip),
+      take: Number(take),
+      where: {
+        userId
+      },
+      select: {
+        id: true,
+        app_name: true,
+        channel: {
+          select: {
+            webpush: true,
+            email: true,
+            sms: true
+          }
+        }
+      }
+
+    })
+
+    const count = await this.prismaService.application.count({
+      where: {
+        userId
+      }
+    })
+
+    return {
+      items: applications,
+      count
+    }
 
   }
 }
