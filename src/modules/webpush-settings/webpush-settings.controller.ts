@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateWebPushSettingsModel } from './webpush-settings.model';
 import { WebPushSettingsService } from './webpush-settings.service';
@@ -28,6 +28,16 @@ export class WebPushSettingsController {
     @Param() { appId = '' }: Record<'appId', string>,
   ) {
     return this.webPushSettingsService.listWebPushSettings(
+      Number(appId),
+    );
+  }
+
+  @Put()
+  @UseGuards(AuthGuard('jwt'))
+  updateStatusWebPushSettings(
+    @Param() { appId = '' }: Record<'appId', string>,
+  ) {
+    return this.webPushSettingsService.updateStatusWebPushSettings(
       Number(appId),
     );
   }
